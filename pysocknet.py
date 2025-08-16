@@ -1,12 +1,15 @@
 import socket
 import ast
+from dataclasses import dataclass
 
 
+@dataclass
 class ClientConnection:
-    def __init__(self, ip: str, port: int):
-        self.ip = ip
-        self.port = port
-        self.ClientSocket = socket.socket()
+    ip: str
+    port: int
+    ClientSocket = socket.socket()
+
+    def __post_init__(self):
         self.__connect()
 
     def __connect(self):
@@ -26,29 +29,31 @@ class ClientConnection:
         self.ClientSocket.send(str.encode(packet))
 
 
+@dataclass
 class ServerConnection:
-    def __init__(self, ip: str, port: int, max_peers_count=100):
-        self.ip = ip
-        self.port = port
-        self.max_peers_count = max_peers_count
-        self.ServerSocket = socket.socket()
+    ip: str
+    port: int
+    max_peers_count: int
+    ServerSocket = socket.socket()
+
+    def __post_init__(self) -> None:
         self.__connect()
 
-    def __connect(self):
+    def __connect(self) -> None:
         try:
             self.ServerSocket.bind((self.ip, self.port))
             self.ServerSocket.listen(self.max_peers_count)
         except socket.error as e:
             print(str(e))
 
-    def receive(self, connection, packet_size: int, raw=False):
+    def receive(self, connection, packet_size: int, raw=False) -> None:
         received_data = connection.recv(packet_size).decode("utf-8")
         if raw:
             return received_data
         else:
             return ast.literal_eval(received_data)
 
-    def send(self, connection, packet: str):
+    def send(self, connection, packet: str) -> None:
         connection.send(str.encode(packet))
 
     def accept(self):
