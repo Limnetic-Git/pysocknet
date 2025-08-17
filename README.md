@@ -2,6 +2,6 @@ The library is based on Sockets, a built-in library in Python. The library offer
 
 ROADMAP:
 - Add support for Pickle serialization
-- Add support for multiple data channels
+- Add support for multiple data channels (DONE)
 - Add support for the UDP protocol. (DONE)
 - Add support for data encryption
