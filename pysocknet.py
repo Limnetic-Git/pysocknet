@@ -123,7 +123,7 @@ class UDPClientConnection:
             self.port = port
             self.ClientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.ClientSocket.bind(('0.0.0.0', 0))
-            self.ServerSocket.settimeout(5.0)
+            self.ClientSocket.settimeout(5.0)
             logging.info(f"UDP-client socket ({self.ip}:{self.port}) has been successfully created")
 
         except socket.error as e:
