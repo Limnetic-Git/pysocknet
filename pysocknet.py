@@ -123,7 +123,7 @@ class UDPClientConnection:
             self.port = port
             self.ClientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.ClientSocket.bind(('0.0.0.0', 0))
-            self.ClientSocket.settimeout(5.0)
+            self.ClientSocket.settimeout(0.25)
             logging.info(f"UDP-client socket ({self.ip}:{self.port}) has been successfully created")
 
         except socket.error as e:
@@ -137,7 +137,10 @@ class UDPClientConnection:
                 return received_data.decode('utf-8')
             else:
                 return ast.literal_eval(received_data.decode('utf-8'))
-        except socket.error as e:
+        except socket.timeout:
+            pass
+        
+        except Exception as e:
             logging.error(e)
             raise e
         
@@ -161,7 +164,6 @@ class UDPServerConnection:
             self.ip = ip
             self.port = port
             self.ServerSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.ServerSocket.settimeout(5.0) 
             self.__connect()
             logging.info(f"UDP-server socket ({self.ip}:{self.port}) has been successfully created")
 
